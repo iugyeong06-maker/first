@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { ProductService } from "@/lib/api";
 import { Product } from "@/lib/mockData";
@@ -8,7 +8,7 @@ import ProductCard from "@/components/ProductCard";
 import { motion, AnimatePresence } from "framer-motion";
 import { Filter, Loader2 } from "lucide-react";
 
-export default function SearchResults() {
+function SearchResultsContent() {
   const searchParams = useSearchParams();
   const q = searchParams.get("q") || "";
   const url = searchParams.get("url") || "";
@@ -78,5 +78,18 @@ export default function SearchResults() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function SearchResults() {
+  return (
+    <Suspense fallback={
+      <div className="flex flex-col items-center justify-center py-32 gap-4">
+        <Loader2 size={40} className="text-[#e60023] animate-spin" />
+        <p className="text-gray-400 font-medium">초기화 중...</p>
+      </div>
+    }>
+      <SearchResultsContent />
+    </Suspense>
   );
 }
