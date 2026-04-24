@@ -32,7 +32,7 @@ function SearchResultsContent() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 px-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">"{query}" 검색 결과</h2>
+          <h2 className="text-2xl font-bold text-gray-900">&quot;{query}&quot; 검색 결과</h2>
           <p className="text-gray-500 mt-1">
             {loading ? "결과를 불러오는 중..." : `유사한 스타일의 제품 ${products.length}개를 찾았습니다.`}
           </p>
