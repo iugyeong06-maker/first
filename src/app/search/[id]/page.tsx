@@ -1,17 +1,38 @@
 "use client";
 
-import { use } from "react";
-import { MOCK_PRODUCTS } from "@/lib/mockData";
+import { use, useEffect, useState } from "react";
+import { ProductService } from "@/lib/api";
+import { Product } from "@/lib/mockData";
 import PriceComparison from "@/components/PriceComparison";
 import Recommendation from "@/components/Recommendation";
-import { ChevronLeft, Share2, Heart, Info } from "lucide-react";
+import { ChevronLeft, Share2, Heart, Info, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { notFound } from "next/navigation";
 
 export default function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const product = MOCK_PRODUCTS.find((p) => p.id === id);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchProduct() {
+      setLoading(true);
+      const data = await ProductService.getProductById(id);
+      setProduct(data);
+      setLoading(false);
+    }
+    fetchProduct();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+        <Loader2 size={40} className="text-[#e60023] animate-spin" />
+        <p className="text-gray-400">제품 상세 정보를 불러오는 중입니다...</p>
+      </div>
+    );
+  }
 
   if (!product) {
     notFound();
